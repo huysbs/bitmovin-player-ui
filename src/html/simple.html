@@ -45,8 +45,13 @@
         playback: {
             muted: true,
             autoplay: true,
-        }
+        },
+        // location: {
+        //   ui: '../src/js/app.js'
+        // }
     };
+
+    
 
     var source = {
         dash: '//bitdash-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd',
@@ -58,9 +63,22 @@
         },
     };
 
-    var player = new bitmovin.player.Player(document.getElementById('player'), conf);
-    var uiManager = bitmovin.playerui.UIFactory.buildDefaultUI(player, {});
-    player.load(source);
+    // import { Player } from 'bitmovin-player';
+    // import { PlaybackToggleOverlay, UIContainer, UIManager } from 'bitmovin-player-ui';
+
+    // // Definition of the UI structure
+    // const mySimpleUi = new UIContainer({
+    //   components: [
+    //     new PlaybackToggleOverlay(),
+    //   ],
+    // });
+
+    // const player = new Player(document.getElementById('player'), config);
+    // const myUiManager = new UIManager(player, mySimpleUi);
+
+    // var player = new bitmovin.player.Player(document.getElementById('player'), conf);
+    // var uiManager = bitmovin.playerui.UIFactory.buildDefaultUI(player, {});
+    // player.load(source);
 </script>
 </body>
 </html>

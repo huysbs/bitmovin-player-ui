@@ -51,6 +51,7 @@ export class Label<Config extends LabelConfig> extends Component<Config> {
       'id': this.config.id,
       'for': this.config.for,
       'class': this.getCssClasses(),
+      ...(this.config.tabIndex && { tabIndex: this.config.tabIndex.toString() }),
     }).html(i18n.performLocalization(this.text));
 
     labelElement.on('click', () => {

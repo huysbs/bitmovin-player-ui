@@ -9,6 +9,10 @@
   white-space: nowrap;
 }
 
+.#{$prefix}-focus-on-label .#{$prefix}-ui-label.bmpui-focus-visible {
+  outline: unset;
+}
+
 .#{$prefix}-ui-label {
   @extend %ui-label;
 }

@@ -11,12 +11,16 @@ import {PlaybackSpeedSelectBox} from './playbackspeedselectbox';
 import { PlayerAPI } from 'bitmovin-player';
 import { LocalizableText } from '../localization/i18n';
 
+export interface SettingsPanelItemConfig extends ContainerConfig {
+  allowLabelFocus?: boolean;
+}
+
 /**
  * An item for a {@link SettingsPanelPage},
  * Containing an optional {@link Label} and a component that configures a setting.
  * If the components is a {@link SelectBox} it will handle the logic of displaying it or not
  */
-export class SettingsPanelItem extends Container<ContainerConfig> {
+export class SettingsPanelItem extends Container<SettingsPanelItemConfig> {
 
   private label: Component<ComponentConfig>;
   private setting: Component<ComponentConfig>;
@@ -25,21 +29,28 @@ export class SettingsPanelItem extends Container<ContainerConfig> {
     onActiveChanged: new EventDispatcher<SettingsPanelItem, NoArgs>(),
   };
 
-  constructor(label: LocalizableText | Component<ComponentConfig>, setting: Component<ComponentConfig>, config: ContainerConfig = {}) {
+  constructor(label: LocalizableText | Component<ComponentConfig>, setting: Component<ComponentConfig>, config: SettingsPanelItemConfig = {}) {
     super(config);
 
     this.setting = setting;
 
-    this.config = this.mergeConfig(config, {
+    const defaultConfig: SettingsPanelItemConfig = {
       cssClass: 'ui-settings-panel-item',
       role: 'menuitem',
-    }, this.config);
+      allowLabelFocus: false,
+    };
+
+    this.config = this.mergeConfig(config, defaultConfig, this.config);
 
     if (label !== null) {
       if (label instanceof Component) {
         this.label = label;
       } else {
-        this.label = new Label({ text: label, for: this.setting.getConfig().id, tabIndex: -1 } as LabelConfig);
+        this.label = new Label({
+          text: label,
+          for: this.setting.getConfig().id,
+          ...(this.getConfig().allowLabelFocus && { tabIndex: -1 }),
+        } as LabelConfig);
       }
       this.addComponent(this.label);
     }

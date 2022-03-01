@@ -1,7 +1,6 @@
-import {SettingsPanelPage} from '../settingspanelpage';
+import {SettingsPanelPage, SettingsPanelPageConfig} from '../settingspanelpage';
 import {SettingsPanel} from '../settingspanel';
 import {SubtitleOverlay} from '../subtitleoverlay';
-import {ContainerConfig} from '../container';
 import {SubtitleSettingsManager} from './subtitlesettingsmanager';
 import {Component, ComponentConfig} from '../component';
 import {FontSizeSelectBox} from './fontsizeselectbox';
@@ -20,7 +19,7 @@ import {SettingsPanelItem} from '../settingspanelitem';
 import { PlayerAPI } from 'bitmovin-player';
 import { i18n } from '../../localization/i18n';
 
-export interface SubtitleSettingsPanelPageConfig extends ContainerConfig {
+export interface SubtitleSettingsPanelPageConfig extends SettingsPanelPageConfig {
   settingsPanel: SettingsPanel;
   overlay: SubtitleOverlay;
 }

@@ -5,12 +5,17 @@ import {Event, EventDispatcher, NoArgs} from '../eventdispatcher';
 import { PlayerAPI } from 'bitmovin-player';
 import { BrowserUtils } from '../browserutils';
 
+export interface SettingsPanelPageConfig extends ContainerConfig {
+  autoFocusOn?: 'activeItems' | 'label';
+}
+
 /**
  * A panel containing a list of {@link SettingsPanelItem items} that represent labelled settings.
  */
-export class SettingsPanelPage extends Container<ContainerConfig> {
+export class SettingsPanelPage extends Container<SettingsPanelPageConfig> {
 
   private static readonly CLASS_LAST = 'last';
+  private static readonly CLASS_FOCUS_ON_LABEL = 'focus-on-label';
 
   private settingsPanelPageEvents = {
     onSettingsStateChanged: new EventDispatcher<SettingsPanelPage, NoArgs>(),
@@ -18,13 +23,18 @@ export class SettingsPanelPage extends Container<ContainerConfig> {
     onInactive: new EventDispatcher<SettingsPanelPage, NoArgs>(),
   };
 
-  constructor(config: ContainerConfig) {
+  constructor(config: SettingsPanelPageConfig) {
     super(config);
 
-    this.config = this.mergeConfig<ContainerConfig>(config, {
+    this.config = this.mergeConfig<SettingsPanelPageConfig>(config, {
       cssClass: 'ui-settings-panel-page',
       role: 'menu',
+      autoFocusOn: 'activeItems',
     }, this.config);
+
+    if (this.getConfig().autoFocusOn === 'label') {
+      this.config.cssClass += ` ${this.prefixCss(SettingsPanelPage.CLASS_FOCUS_ON_LABEL)}`;
+    }
   }
 
   configure(player: PlayerAPI, uimanager: UIInstanceManager): void {
@@ -76,13 +86,28 @@ export class SettingsPanelPage extends Container<ContainerConfig> {
   onActiveEvent() {
     this.settingsPanelPageEvents.onActive.dispatch(this);
 
-    const pageElement = this.getDomElement();
-    const pageLabels = pageElement.find('label');
+    switch (this.getConfig().autoFocusOn) {
+      case 'label': {
+        const pageElement = this.getDomElement();
+        const pageLabels = pageElement.find('label');
 
-    for (const label of pageLabels.get()) {
-      const labelIsVisible = label.offsetWidth > 0 && label.offsetHeight > 0;
-      if (labelIsVisible) {
-        label.focus();
+        for (const label of pageLabels.get()) {
+          const labelIsVisible = label.offsetWidth > 0 && label.offsetHeight > 0;
+          if (labelIsVisible) {
+            label.focus();
+            break;
+          }
+        }
+        break;
+      }
+
+      case 'activeItems':
+      default: {
+        const activeItems = this.getItems().filter((item) => item.isActive());
+        // Disable focus for iOS and iPadOS 13. They open select boxes automatically on focus and we want to avoid that.
+        if (activeItems.length > 0 && !BrowserUtils.isIOS && !(BrowserUtils.isMacIntel && BrowserUtils.isTouchSupported)) {
+          activeItems[0].getDomElement().focusToFirstInput();
+        }
         break;
       }
     }

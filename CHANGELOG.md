@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [develop]
+
+## Added
+- Support rendering of labels with tabIndex
+- On display, SettingsPanelPage can be configured to autofocus either on first active item (default) or first visible label. Configuration via `SettingsPanelPageConfig.autofocus` set to `activeItems` or `label`.
+- SettingsPanel can now be closed by pressing the ESC key from the keyboard.
+
 ## [3.35.0] - 2022-03-01
 
 ### Fixed

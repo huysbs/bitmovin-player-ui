@@ -108,6 +108,14 @@ export class SettingsPanel extends Container<SettingsPanelConfig> {
       });
     }
 
+    // Allow closing of settingspanel by pressing ESC key, useful for keyboard navigation.
+    this.getDomElement().on('keydown', (event: KeyboardEvent) => {
+      const { key } = event;
+      if (key === 'Escape') {
+        this.hide();
+      }
+    });
+
     this.onHide.subscribe(() => {
       if (config.hideDelay > -1) {
         // Clear timeout when hidden from outside
